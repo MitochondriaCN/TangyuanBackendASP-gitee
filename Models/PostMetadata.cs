@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TangyuanBackendASP.Models
 {
+    [PrimaryKey(nameof(PostId))]
     public class PostMetadata
     {
-        private int PostId { get; set; }
+        
+        public int PostId { get; set; }
 
-        private int UserId {  get; set; }
+        public int UserId {  get; set; }
 
         [DataType(DataType.DateTime)]
-        private DateTime PostDateTime {  get; set; }
+        public DateTime PostDateTime {  get; set; }
 
-        private int SectionId {  get; set; }
+        public int SectionId {  get; set; }
     }
 }

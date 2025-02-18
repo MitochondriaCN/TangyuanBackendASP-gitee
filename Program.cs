@@ -17,6 +17,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<TangyuanDbContext>(
+        options => options.UseInMemoryDatabase("tangyuan"));
+
+/*
+builder.Services.AddDbContext<TangyuanDbContext>(
+    options => options.UseMySQL("connectionstring"));
+    */
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,14 +32,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    builder.Services.AddDbContext<TangyuanDbContext>(
-        options => options.UseInMemoryDatabase("tangyuan"));
-}
-else
-{
-    builder.Services.AddDbContext<TangyuanDbContext>(
-        options => options.UseMySQL("connectionstring"));
 }
 
 //糖原天下无敌

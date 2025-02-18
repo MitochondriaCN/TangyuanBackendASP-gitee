@@ -4,8 +4,8 @@ namespace TangyuanBackendASP.Data
 {
     public class TangyuanDbContext : DbContext
     {
-        public TangyuanDbContext(DbContextOptions options) : base(options) { }
+        public TangyuanDbContext(DbContextOptions<TangyuanDbContext> options) : base(options) { }
 
-        public DbSet<Models.PostMetadata> PostMetadata { get; set; }
+        public DbSet<Models.PostMetadata> PostMetadata { get; set; } = null;
     }
 }
