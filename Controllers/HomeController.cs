@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TangyuanBackendASP.Data;
+using TangyuanBackendASP.Models;
 
 namespace TangyuanBackendASP.Controllers
 {
@@ -6,11 +9,17 @@ namespace TangyuanBackendASP.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly TangyuanDbContext _db;
+
+        public HomeController(TangyuanDbContext db)
         {
-            
-            return Ok("陪一根");
+            _db = db;
+        }
+
+        [HttpGet]
+        public List<PostMetadata> Index()
+        {
+            return _db.PostMetadata.ToList();
         }
     }
 }
