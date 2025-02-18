@@ -5,6 +5,9 @@
  * ——卡尔·马克思
  */
 
+using Microsoft.EntityFrameworkCore;
+using TangyuanBackendASP.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +24,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    builder.Services.AddDbContext<TangyuanDbContext>(
+        options => options.UseInMemoryDatabase("tangyuan"));
+}
+else
+{
+    builder.Services.AddDbContext<TangyuanDbContext>(
+        options => options.UseMySQL("connectionstring"));
 }
 
 //糖原天下无敌
