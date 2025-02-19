@@ -30,7 +30,11 @@ else
     options => options.UseMySQL(builder.Configuration.GetConnectionString("TangyuanDbContext")));
 }
 
+
 var app = builder.Build();
+
+//确认数据库被创建
+app.Services.CreateScope().ServiceProvider.GetRequiredService<TangyuanDbContext>().Database.EnsureCreated();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
