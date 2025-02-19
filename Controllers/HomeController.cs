@@ -6,7 +6,7 @@ using TangyuanBackendASP.Models;
 namespace TangyuanBackendASP.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
         private readonly TangyuanDbContext _db;
@@ -17,9 +17,9 @@ namespace TangyuanBackendASP.Controllers
         }
 
         [HttpGet]
-        public List<PostMetadata> Index()
+        public IActionResult Index()
         {
-            return _db.PostMetadata.ToList();
+            return Ok("Using " + _db.Database.ProviderName);
         }
     }
 }

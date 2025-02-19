@@ -17,13 +17,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TangyuanDbContext>(
+//开发环境下，启用内存数据库用于调试
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<TangyuanDbContext>(
         options => options.UseInMemoryDatabase("tangyuan"));
-
-/*
-builder.Services.AddDbContext<TangyuanDbContext>(
-    options => options.UseMySQL("connectionstring"));
-    */
+}
+//生产环境下，连接MySQL
+else
+{
+    builder.Services.AddDbContext<TangyuanDbContext>(
+    options => options.UseMySQL(builder.Configuration.GetConnectionString("TangyuanDbContext")));
+}
 
 var app = builder.Build();
 
