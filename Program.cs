@@ -17,17 +17,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//开发环境下，启用内存数据库用于调试
+//开发环境下，连接远端MySQL
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<TangyuanDbContext>(
-        options => options.UseInMemoryDatabase("tangyuan"));
+        options => options.UseMySQL(builder.Configuration.GetConnectionString("Remote")));
 }
-//生产环境下，连接MySQL
+//生产环境下，连接本地MySQL
 else
 {
     builder.Services.AddDbContext<TangyuanDbContext>(
-    options => options.UseMySQL(builder.Configuration.GetConnectionString("TangyuanDbContext")));
+        options => options.UseMySQL(builder.Configuration.GetConnectionString("Local")));
 }
 
 
