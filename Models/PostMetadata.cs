@@ -16,5 +16,9 @@ namespace TangyuanBackendASP.Models
         public DateTime PostDateTime {  get; set; }
 
         public int SectionId {  get; set; }
+
+        public string Title { get; set; }
+
+        public bool IsVisible { get; set; }
     }
 }
