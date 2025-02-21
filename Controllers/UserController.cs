@@ -23,7 +23,7 @@ namespace TangyuanBackendASP.Controllers
         //增
         // POST api/<UserController>
         [HttpPost]
-        public IActionResult Post([FromBody]string nickname, [FromBody]string phoneNumber)
+        public IActionResult Post(string nickname, string phoneNumber)
         {
             if (_db.User.Any<User>(u => u.PhoneNumber == phoneNumber))
             {
@@ -46,15 +46,26 @@ namespace TangyuanBackendASP.Controllers
         //改
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody] User user)
         {
+            _db.User.Update(user);
+            _db.SaveChanges();
         }
 
         //删
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            User target = _db.User.Where<User>(u => u.UserId == id).FirstOrDefault();
+            if (target != null)
+            {
+                _db.User.Remove(target);
+                _db.SaveChanges();
+                return Ok();
+            }
+            else
+                return NotFound();
         }
 
         public UserController(TangyuanDbContext db)
