@@ -12,6 +12,7 @@ namespace TangyuanBackendASP.Controllers
     {
         private TangyuanDbContext _db;
 
+        //查
         // GET: api/<UserController>
         [HttpGet("{id}")]
         public User GetSingle(int id)
@@ -19,18 +20,37 @@ namespace TangyuanBackendASP.Controllers
             return _db.User.Where<User>(u => u.UserId == id).FirstOrDefault();
         }
 
+        //增
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]string nickname, [FromBody]string phoneNumber)
         {
+            if (_db.User.Any<User>(u => u.PhoneNumber == phoneNumber))
+            {
+
+                return Conflict("Phone number already exists");
+            }
+            int validId = _db.User.MaxBy<User, int>(User => User.UserId).UserId + 1;
+            User u = new()
+            {
+                UserId = validId,
+                NickName = nickname,
+                PhoneNumber = phoneNumber
+            };
+            _db.User.Add(u);
+            _db.SaveChanges();
+
+            return Ok();
         }
 
+        //改
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
+        //删
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
