@@ -10,5 +10,6 @@ namespace TangyuanBackendASP.Data
         }
 
         public DbSet<Models.PostMetadata> PostMetadata { get; set; } = null;
+        public DbSet<Models.User> User { get; set; } = null;
     }
 }
