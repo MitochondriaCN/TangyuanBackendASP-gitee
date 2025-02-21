@@ -15,10 +15,10 @@ namespace TangyuanBackendASP.Controllers
             _db = db;
         }
 
-        [HttpGet]
-        public PostMetadata GetSingle(int postId)
+        [HttpGet("{id}")]
+        public PostMetadata GetSingle(int id)
         {
-            return _db.PostMetadata.Where(p => p.PostId == postId).FirstOrDefault();
+            return _db.PostMetadata.Where(p => p.PostId == id).FirstOrDefault();
         }
     }
 }
