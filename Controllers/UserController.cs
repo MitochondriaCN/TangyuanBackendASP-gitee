@@ -30,7 +30,8 @@ namespace TangyuanBackendASP.Controllers
 
                 return Conflict("Phone number already exists");
             }
-            int validId = _db.User.MaxBy<User, int>(User => User.UserId).UserId + 1;
+            User maxIdUser = _db.User.OrderByDescending(u => u.UserId).FirstOrDefault();
+            int validId = maxIdUser == null ? 1 : maxIdUser.UserId + 1;
             User u = new()
             {
                 UserId = validId,

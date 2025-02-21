@@ -33,6 +33,12 @@ else
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TangyuanDbContext>();
+    dbContext.Database.EnsureCreated(); // Alternatively, use this to ensure the database is created
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
