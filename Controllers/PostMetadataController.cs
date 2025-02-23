@@ -34,7 +34,6 @@ namespace TangyuanBackendASP.Controllers
                 UserId = post.UserId,
                 PostDateTime = post.PostDateTime,
                 SectionId = post.SectionId,
-                Title = post.Title,
                 IsVisible = post.IsVisible
             };
             _db.PostMetadata.Add(p);
@@ -63,7 +62,6 @@ namespace TangyuanBackendASP.Controllers
             public int UserId { get; set; }
             public DateTime PostDateTime { get; set; }
             public int SectionId { get; set; }
-            public string Title { get; set; }
             public bool IsVisible { get; set; }
         }
     }

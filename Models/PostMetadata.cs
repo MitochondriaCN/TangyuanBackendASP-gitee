@@ -15,9 +15,10 @@ namespace TangyuanBackendASP.Models
         [DataType(DataType.DateTime)]
         public DateTime PostDateTime {  get; set; }
 
+        /// <summary>
+        /// 所处板块的ID
+        /// </summary>
         public int SectionId {  get; set; }
-
-        public string Title { get; set; }
 
         public bool IsVisible { get; set; }
     }
