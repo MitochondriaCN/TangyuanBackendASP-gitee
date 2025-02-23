@@ -14,6 +14,11 @@ namespace TangyuanBackendASP.Controllers
 
         //查
         // GET: api/<UserController>
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="id">用户ID</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public User GetSingle(int id)
         {
@@ -22,9 +27,15 @@ namespace TangyuanBackendASP.Controllers
 
         //增
         // POST api/<UserController>
+        /// <summary>
+        /// 增加新用户
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post([FromBody] CreateUserDto user)
         {
+            //TODO:电话号码校验
             if (_db.User.Any<User>(u => u.PhoneNumber == user.PhoneNumber))
             {
 
@@ -49,6 +60,7 @@ namespace TangyuanBackendASP.Controllers
         [HttpPut("{id}")]
         public void Put([FromBody] User user)
         {
+            //TODO:有问题
             _db.User.Update(user);
             _db.SaveChanges();
         }
