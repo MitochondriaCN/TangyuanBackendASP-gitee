@@ -1,5 +1,8 @@
-﻿namespace TangyuanBackendASP.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TangyuanBackendASP.Models
 {
+    [PrimaryKey(nameof(PostId))]
     public class PostBody
     {
         public int PostId { get; set; }
