@@ -39,10 +39,11 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated(); // Alternatively, use this to ensure the database is created
 }
 
+app.UseSwagger();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
 
