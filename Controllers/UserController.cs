@@ -23,9 +23,9 @@ namespace TangyuanBackendASP.Controllers
         //增
         // POST api/<UserController>
         [HttpPost]
-        public IActionResult Post(string nickname, string phoneNumber)
+        public IActionResult Post([FromBody] CreateUserDto user)
         {
-            if (_db.User.Any<User>(u => u.PhoneNumber == phoneNumber))
+            if (_db.User.Any<User>(u => u.PhoneNumber == user.PhoneNumber))
             {
 
                 return Conflict("Phone number already exists");
@@ -35,8 +35,8 @@ namespace TangyuanBackendASP.Controllers
             User u = new()
             {
                 UserId = validId,
-                NickName = nickname,
-                PhoneNumber = phoneNumber
+                NickName = user.NickName,
+                PhoneNumber = user.PhoneNumber
             };
             _db.User.Add(u);
             _db.SaveChanges();
@@ -72,6 +72,12 @@ namespace TangyuanBackendASP.Controllers
         public UserController(TangyuanDbContext db)
         {
             _db = db;
+        }
+
+        public class CreateUserDto
+        {
+            public string NickName { get; set; }
+            public string PhoneNumber { get; set; }
         }
     }
 }
