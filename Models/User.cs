@@ -5,13 +5,15 @@ namespace TangyuanBackendASP.Models
     [PrimaryKey(nameof(UserId))]
     public class User
     {
-        public int UserId { get; set; }
+        public required int UserId { get; set; }
 
-        public string NickName { get; set; }
+        public required string NickName { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public required string PhoneNumber { get; set; }
 
-        
+        public required string ISORegionName { get; set; }
+
+
         public string? Email { get; set; }
     }
 }
