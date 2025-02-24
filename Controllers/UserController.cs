@@ -100,8 +100,8 @@ namespace TangyuanBackendASP.Controllers
 
         public class CreateUserDto
         {
-            public string NickName { get; set; }
-            public string PhoneNumber { get; set; }
+            public required string NickName { get; set; }
+            public required string PhoneNumber { get; set; }
         }
     }
 }
