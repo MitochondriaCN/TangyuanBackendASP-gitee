@@ -11,6 +11,9 @@ namespace TangyuanBackendASP.Models
 
         public required string PhoneNumber { get; set; }
 
+        /// <summary>
+        /// 用户所在区域，ISO 3166-1二位国家编码，如CN。
+        /// </summary>
         public required string ISORegionName { get; set; }
 
 

@@ -35,11 +35,23 @@ namespace TangyuanBackendASP.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CreateUserDto user)
         {
-            //TODO:电话号码校验
+            //TODO: 增加全局参数null校验
+            try
+            {
+                if (DataValidator.IsPhoneNumberValid(user.PhoneNumber, user.ISORegionName) == false)
+                {
+                    return BadRequest("Invalid phone number.");
+                }
+            }
+            catch(NotSupportedException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             if (_db.User.Any<User>(u => u.PhoneNumber == user.PhoneNumber))
             {
 
-                return Conflict("Phone number already exists");
+                return Conflict("Phone number already exists.");
             }
             User maxIdUser = _db.User.OrderByDescending(u => u.UserId).FirstOrDefault();
             int validId = maxIdUser == null ? 1 : maxIdUser.UserId + 1;
@@ -47,7 +59,8 @@ namespace TangyuanBackendASP.Controllers
             {
                 UserId = validId,
                 NickName = user.NickName,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                ISORegionName = user.ISORegionName
             };
             _db.User.Add(u);
             _db.SaveChanges();
@@ -102,6 +115,8 @@ namespace TangyuanBackendASP.Controllers
         {
             public required string NickName { get; set; }
             public required string PhoneNumber { get; set; }
+
+            public required string ISORegionName { get; set; }
         }
     }
 }
