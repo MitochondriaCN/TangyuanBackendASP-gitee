@@ -58,11 +58,23 @@ namespace TangyuanBackendASP.Controllers
         //改
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put([FromBody] User user)
+        public IActionResult Put([FromBody] User user)
         {
-            //TODO:有问题
-            _db.User.Update(user);
-            _db.SaveChanges();
+            User target = _db.User.Where<User>(u => u.UserId == user.UserId).FirstOrDefault();
+            if (target != null)
+            {
+                target.NickName = user.NickName;
+                target.PhoneNumber = user.PhoneNumber;
+                target.Email = user.Email;
+
+                _db.User.Update(target);
+                _db.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         //删
