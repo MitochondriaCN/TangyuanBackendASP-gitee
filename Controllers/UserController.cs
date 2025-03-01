@@ -20,9 +20,17 @@ namespace TangyuanBackendASP.Controllers
         /// <param name="id">用户ID</param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public User GetSingle(int id)
+        public IActionResult GetSingle(int id)
         {
-            return _db.User.Where<User>(u => u.UserId == id).FirstOrDefault();
+            User u = _db.User.Where<User>(u => u.UserId == id).FirstOrDefault();
+            if (u == null)
+            {
+                return NotFound("No such user.");
+            }
+            else
+            {
+                return Ok(u);
+            }
         }
 
         //增
