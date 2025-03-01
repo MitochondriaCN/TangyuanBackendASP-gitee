@@ -17,16 +17,32 @@ namespace TangyuanBackendASP.Controllers
 
         //查元数据
         [HttpGet("metadata/{id}")]
-        public PostMetadata GetSingleMetadata(int id)
+        public IActionResult GetSingleMetadata(int id)
         {
-            return _db.PostMetadata.Where(p => p.PostId == id).FirstOrDefault();
+            PostMetadata metadata = _db.PostMetadata.Where(p => p.PostId == id).FirstOrDefault();
+            if(metadata == null)
+            {
+                return NotFound("No such post.");
+            }
+            else
+            {
+                return Ok(metadata);
+            }
         }
 
         //查内容
         [HttpGet("body/{id}")]
-        public PostBody GetSingleBody(int id)
+        public IActionResult GetSingleBody(int id)
         {
-            return _db.PostBody.Where(p => p.PostId == id).FirstOrDefault();
+            PostBody pb = _db.PostBody.Where(p => p.PostId == id).FirstOrDefault();
+            if (pb == null)
+            {
+                return NotFound("No such post.");
+            }
+            else
+            {
+                return Ok(pb);
+            }
         }
 
         //增元数据
