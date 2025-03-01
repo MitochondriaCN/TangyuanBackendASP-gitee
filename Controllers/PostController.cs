@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TangyuanBackendASP.Data;
 using TangyuanBackendASP.Models;
 
@@ -28,6 +29,21 @@ namespace TangyuanBackendASP.Controllers
             {
                 return Ok(metadata);
             }
+        }
+
+        //查随机条元数据
+        [HttpGet("metadata/random/{count}")]
+        public IActionResult GetRandomMetadata(int count)
+        {
+            if (count <= 0||count>10)
+            {
+                return BadRequest("Count should be between 1 and 10.");
+            }
+            if(count>_db.PostMetadata.Count())
+            {
+                return BadRequest("Count should be less than the total number of posts.");
+            }
+            return Ok(_db.PostMetadata.OrderBy(p => EF.Functions.Random()).Take(count).ToList());
         }
 
         //查内容
