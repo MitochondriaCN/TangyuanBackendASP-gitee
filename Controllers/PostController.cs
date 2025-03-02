@@ -77,7 +77,8 @@ namespace TangyuanBackendASP.Controllers
             };
             _db.PostMetadata.Add(p);
             _db.SaveChanges();
-            return Ok();
+            //返回匿名类型，包含新建的推文ID
+            return Ok(new { PostId = validId });
         }
 
         //增内容
