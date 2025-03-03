@@ -55,4 +55,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//如果根目录不存在，创建
+if (!Directory.Exists("wwwroot"))
+{
+    Directory.CreateDirectory("wwwroot");
+}
+//如果images文件夹不存在，创建
+if (!Directory.Exists("wwwroot/images"))
+{
+    Directory.CreateDirectory("wwwroot/images");
+}
+//静态文件中间件
+app.UseStaticFiles();
+
 app.Run();
