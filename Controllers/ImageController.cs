@@ -12,7 +12,7 @@ namespace TangyuanBackendASP.Controllers
         /// 上传图片。使用时，一定要严格判断文件格式，严禁某些SB上传非JPEG格式的文件。
         /// </summary>
         /// <returns></returns>
-        [HttpPost("image/uploadjpg")]
+        [HttpPost("uploadjpg")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -21,7 +21,7 @@ namespace TangyuanBackendASP.Controllers
             }
 
             string guid = Guid.NewGuid().ToString();
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", guid);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", guid + ".jpg");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
