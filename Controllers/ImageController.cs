@@ -19,7 +19,11 @@ namespace TangyuanBackendASP.Controllers
             {
                 return BadRequest("File is null or empty.");
             }
-
+            //限制图片大小5MB
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File is too large.");
+            }
             string guid = Guid.NewGuid().ToString();
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", guid + ".jpg");
 
