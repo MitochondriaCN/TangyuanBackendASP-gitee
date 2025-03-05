@@ -68,7 +68,8 @@ namespace TangyuanBackendASP.Controllers
                 UserId = validId,
                 NickName = user.NickName,
                 PhoneNumber = user.PhoneNumber,
-                ISORegionName = user.ISORegionName
+                ISORegionName = user.ISORegionName,
+                AvatarGuid = user.AvatarGuid
             };
             _db.User.Add(u);
             _db.SaveChanges();
@@ -87,6 +88,7 @@ namespace TangyuanBackendASP.Controllers
                 target.NickName = user.NickName;
                 target.PhoneNumber = user.PhoneNumber;
                 target.Email = user.Email;
+                target.AvatarGuid = user.AvatarGuid;
 
                 _db.User.Update(target);
                 _db.SaveChanges();
@@ -123,8 +125,8 @@ namespace TangyuanBackendASP.Controllers
         {
             public required string NickName { get; set; }
             public required string PhoneNumber { get; set; }
-
             public required string ISORegionName { get; set; }
+            public required string AvatarGuid { get; set; }
         }
     }
 }
