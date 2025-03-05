@@ -16,7 +16,10 @@ namespace TangyuanBackendASP.Models
         /// </summary>
         public required string ISORegionName { get; set; }
 
+        public required string AvatarGuid { get; set; }
 
         public string? Email { get; set; }
+
+        public string? Bio { get; set; }
     }
 }
