@@ -65,7 +65,5 @@ if (!Directory.Exists("wwwroot/images"))
 {
     Directory.CreateDirectory("wwwroot/images");
 }
-//静态文件中间件
-app.UseStaticFiles();
 
 app.Run();
