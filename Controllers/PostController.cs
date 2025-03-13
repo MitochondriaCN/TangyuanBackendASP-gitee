@@ -84,6 +84,7 @@ namespace TangyuanBackendASP.Controllers
         }
 
         //增内容
+        [Authorize]
         [HttpPost("body")]
         public IActionResult CreatePostBody([FromBody] PostBody post)
         {
@@ -101,6 +102,7 @@ namespace TangyuanBackendASP.Controllers
         }
 
         //删
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

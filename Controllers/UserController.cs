@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TangyuanBackendASP.Data;
 using TangyuanBackendASP.Models;
 
@@ -29,7 +30,16 @@ namespace TangyuanBackendASP.Controllers
             }
             else
             {
-                return Ok(u);
+                return Ok(new
+                {
+                    UserId = u.UserId,
+                    NickName = u.NickName,
+                    PhoneNumber = u.PhoneNumber,
+                    Email = u.Email,
+                    AvatarGuid = u.AvatarGuid,
+                    Bio = u.Bio,
+                    ISORegionName = u.ISORegionName
+                });
             }
         }
 
@@ -40,6 +50,7 @@ namespace TangyuanBackendASP.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public IActionResult Post([FromBody] CreateUserDto user)
         {
@@ -75,11 +86,15 @@ namespace TangyuanBackendASP.Controllers
             _db.User.Add(u);
             _db.SaveChanges();
 
-            return Ok();
+            return Ok(new
+            {
+                UserId = validId
+            });
         }
 
         //改
         // PUT api/<UserController>/5
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put([FromBody] User user)
         {
@@ -90,6 +105,9 @@ namespace TangyuanBackendASP.Controllers
                 target.PhoneNumber = user.PhoneNumber;
                 target.Email = user.Email;
                 target.AvatarGuid = user.AvatarGuid;
+                target.Bio = user.Bio;
+                target.ISORegionName = user.ISORegionName;
+                target.Password = user.Password;
 
                 _db.User.Update(target);
                 _db.SaveChanges();
@@ -103,6 +121,7 @@ namespace TangyuanBackendASP.Controllers
 
         //删
         // DELETE api/<UserController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

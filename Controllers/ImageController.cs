@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TangyuanBackendASP.Controllers
 {
@@ -12,6 +13,7 @@ namespace TangyuanBackendASP.Controllers
         /// 上传图片。使用时，一定要严格判断文件格式，严禁某些SB上传非JPEG格式的文件。
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("uploadjpg")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
