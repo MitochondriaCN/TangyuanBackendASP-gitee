@@ -7,6 +7,8 @@ namespace TangyuanBackendASP.Models
     {
         public required int UserId { get; set; }
 
+        public required string Password { get; set; }
+
         public required string NickName { get; set; }
 
         public required string PhoneNumber { get; set; }
