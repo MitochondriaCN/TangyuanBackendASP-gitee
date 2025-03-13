@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TangyuanBackendASP.Data;
 using TangyuanBackendASP.Models;
@@ -62,6 +63,7 @@ namespace TangyuanBackendASP.Controllers
         }
 
         //增元数据
+        [Authorize]
         [HttpPost("metadata")]
         public IActionResult CreatePostMetadata([FromBody] CreatPostMetadataDto post)
         {

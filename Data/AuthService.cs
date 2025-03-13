@@ -17,8 +17,8 @@ namespace TangyuanBackendASP.Data
         {
             Claim[] claims = new[]
             {
-                new Claim(ClaimTypes.Name, userId),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.Name, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cf["Jwt:Key"]));

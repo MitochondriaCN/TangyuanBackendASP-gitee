@@ -67,6 +67,7 @@ namespace TangyuanBackendASP.Controllers
             {
                 UserId = validId,
                 NickName = user.NickName,
+                Password = user.Password,
                 PhoneNumber = user.PhoneNumber,
                 ISORegionName = user.ISORegionName,
                 AvatarGuid = user.AvatarGuid
@@ -124,6 +125,7 @@ namespace TangyuanBackendASP.Controllers
         public class CreateUserDto
         {
             public required string NickName { get; set; }
+            public required string Password { get; set; }
             public required string PhoneNumber { get; set; }
             public required string ISORegionName { get; set; }
             public required string AvatarGuid { get; set; }
