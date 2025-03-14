@@ -26,7 +26,10 @@ namespace TangyuanBackendASP.Controllers
             {
                 if (u.Password == loginDto.Password)
                 {
-                    return Ok(_auth.GenerateJwtToken(u.UserId));
+                    return Ok(new
+                    {
+                        token = _auth.GenerateJwtToken(u.UserId)
+                    });
                 }
                 else
                 {
