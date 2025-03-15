@@ -48,9 +48,6 @@ namespace TangyuanBackendASP.Controllers
         /// <summary>
         /// 增加新用户
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public IActionResult Post([FromBody] CreateUserDto user)
         {
