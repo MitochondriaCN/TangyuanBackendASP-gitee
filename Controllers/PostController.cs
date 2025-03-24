@@ -22,7 +22,7 @@ namespace TangyuanBackendASP.Controllers
         public IActionResult GetSingleMetadata(int id)
         {
             PostMetadata metadata = _db.PostMetadata.Where(p => p.PostId == id).FirstOrDefault();
-            if(metadata == null)
+            if (metadata == null)
             {
                 return NotFound("No such post.");
             }
@@ -36,11 +36,11 @@ namespace TangyuanBackendASP.Controllers
         [HttpGet("metadata/random/{count}")]
         public IActionResult GetRandomMetadata(int count)
         {
-            if (count <= 0||count>10)
+            if (count <= 0 || count > 10)
             {
                 return BadRequest("Count should be between 1 and 10.");
             }
-            if(count>_db.PostMetadata.Count())
+            if (count > _db.PostMetadata.Count())
             {
                 return BadRequest("Count should be less than the total number of posts.");
             }
@@ -61,6 +61,18 @@ namespace TangyuanBackendASP.Controllers
                 return Ok(pb);
             }
         }
+
+        //根据用户ID查所有帖子Metadata
+        [HttpGet("metadata/user/{id}")]
+        public IActionResult GetMetadatasByUserId(int userId)
+        {
+            if (!_db.User.Any(p => p.UserId == userId))
+            {
+                return BadRequest("No such user.");
+            }
+            return Ok(_db.PostMetadata.Where(p => p.UserId == userId).ToList());
+        }
+
 
         //增元数据
         [Authorize]
@@ -117,7 +129,7 @@ namespace TangyuanBackendASP.Controllers
 
             //删内容
             PostBody pb = _db.PostBody.Where(p => p.PostId == id).FirstOrDefault();
-            if(pb == null)
+            if (pb == null)
             {
                 //光有元数据没内容是服务器的问题，虽然不该发生，但毕竟没什么影响，所以我们不返回500，
                 //但要在信息中说明这个问题
