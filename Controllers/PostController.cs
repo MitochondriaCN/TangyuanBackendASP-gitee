@@ -63,7 +63,7 @@ namespace TangyuanBackendASP.Controllers
         }
 
         //根据用户ID查所有帖子Metadata
-        [HttpGet("metadata/user/{id}")]
+        [HttpGet("metadata/user/{userId}")]
         public IActionResult GetMetadatasByUserId(int userId)
         {
             if (!_db.User.Any(p => p.UserId == userId))
