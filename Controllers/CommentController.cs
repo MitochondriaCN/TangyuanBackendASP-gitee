@@ -56,6 +56,10 @@ namespace TangyuanBackendASP.Controllers
                 return NotFound("No such post.");
             }
             List<Comment> comments = _db.Comment.Where<Comment>(c => c.PostId == postId).ToList();
+            if (comments.Count == 0)
+            {
+                return NotFound("No comments.");
+            }
             return Ok(comments);
         }
 
@@ -67,9 +71,13 @@ namespace TangyuanBackendASP.Controllers
         {
             if (!_db.Comment.Any(c => c.CommentId == parentCommentId))
             {
-                return NotFound("No such comment.");
+                return NotFound("Parent comment doesn't exist.");
             }
             List<Comment> comments = _db.Comment.Where<Comment>(c => c.ParentCommentId == parentCommentId).ToList();
+            if (comments.Count == 0)
+            {
+                return NotFound("No sub comments.");
+            }
             return Ok(comments);
         }
 
