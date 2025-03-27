@@ -37,9 +37,40 @@ namespace TangyuanBackendASP.Controllers
                     UserId = c.UserId,
                     PostId = c.PostId,
                     Content = c.Content,
+                    ImageGuid = c.ImageGuid,
                     CommentDateTime = c.CommentDateTime
                 });
             }
+        }
+
+        /// <summary>
+        /// 查帖子下所有评论
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        [HttpGet("post/{postId}")]
+        public IActionResult GetCommentForPost(int postId)
+        {
+            if (!_db.PostMetadata.Any(p => p.PostId == postId))
+            {
+                return NotFound("No such post.");
+            }
+            List<Comment> comments = _db.Comment.Where<Comment>(c => c.PostId == postId).ToList();
+            return Ok(comments);
+        }
+
+        /// <summary>
+        /// 查评论下所有子评论
+        /// </summary>
+        [HttpGet("sub/{parentCommentId}")]
+        public IActionResult GetSubComment(int parentCommentId)
+        {
+            if (!_db.Comment.Any(c => c.CommentId == parentCommentId))
+            {
+                return NotFound("No such comment.");
+            }
+            List<Comment> comments = _db.Comment.Where<Comment>(c => c.ParentCommentId == parentCommentId).ToList();
+            return Ok(comments);
         }
 
         /// <summary>
@@ -77,6 +108,7 @@ namespace TangyuanBackendASP.Controllers
                 UserId = comment.UserId,
                 PostId = comment.PostId,
                 Content = comment.Content,
+                ImageGuid = comment.ImageGuid,
                 CommentDateTime = comment.CommentDateTime
             };
             _db.Comment.Add(c);
@@ -93,6 +125,7 @@ namespace TangyuanBackendASP.Controllers
             public required int UserId { get; set; }
             public required int PostId { get; set; }
             public required string Content { get; set; }
+            public required string? ImageGuid { get; set; }
             public required DateTime CommentDateTime { get; set; }
         }
     }

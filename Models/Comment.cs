@@ -10,6 +10,7 @@ namespace TangyuanBackendASP.Models
         public required int UserId { get; set; }
         public required int PostId { get; set; }
         public required string Content { get; set; }
+        public required string? ImageGuid { get; set; }
         public required DateTime CommentDateTime { get; set; }
     }
 }
