@@ -85,7 +85,7 @@ namespace TangyuanBackendASP.Controllers
             {
                 PostId = validId,
                 UserId = post.UserId,
-                PostDateTime = post.PostDateTime,
+                PostDateTime = DateTime.UtcNow,//这里使用UTC时间，避免时区问题，弃用dto中的PostDateTime
                 SectionId = post.SectionId,
                 IsVisible = post.IsVisible
             };

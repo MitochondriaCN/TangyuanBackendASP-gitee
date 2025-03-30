@@ -117,7 +117,7 @@ namespace TangyuanBackendASP.Controllers
                 PostId = comment.PostId,
                 Content = comment.Content,
                 ImageGuid = comment.ImageGuid,
-                CommentDateTime = comment.CommentDateTime
+                CommentDateTime = DateTime.UtcNow //这里使用UTC时间，避免时区问题，弃用dto中的CommentDateTime
             };
             _db.Comment.Add(c);
             _db.SaveChanges();
