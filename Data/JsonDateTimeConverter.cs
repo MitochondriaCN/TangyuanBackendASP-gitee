@@ -12,7 +12,7 @@ namespace TangyuanBackendASP.Data
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            writer.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
     }
 }
