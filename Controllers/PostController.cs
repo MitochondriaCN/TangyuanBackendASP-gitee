@@ -32,6 +32,21 @@ namespace TangyuanBackendASP.Controllers
             }
         }
 
+        //查最新公告，公告的sectionId是0
+        [HttpGet("metadata/notice")]
+        public IActionResult GetNewestNotice()
+        {
+            PostMetadata noticeMetadata = _db.PostMetadata.Where(p => p.SectionId == 0).OrderByDescending(p => p.PostDateTime).FirstOrDefault();
+            if (noticeMetadata == null)
+            {
+                return NotFound("No notice.");
+            }
+            else
+            {
+                return Ok(noticeMetadata);
+            }
+        }
+
         //查随机条元数据
         [HttpGet("metadata/random/{count}")]
         public IActionResult GetRandomMetadata(int count)
