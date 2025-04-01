@@ -1,5 +1,8 @@
-﻿namespace TangyuanBackendASP.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TangyuanBackendASP.Models
 {
+    [PrimaryKey(nameof(NotificationId))]
     public class Notification
     {
         public int NotificationId { get; set; }
