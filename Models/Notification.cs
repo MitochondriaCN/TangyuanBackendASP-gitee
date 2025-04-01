@@ -7,5 +7,6 @@
         public bool IsRead { get; set; }
         public int TargetPostId { get; set; }
         public int TargetCommentId { get; set; }
+        public DateTime NotificationDateTime { get; set; }
     }
 }

@@ -120,7 +120,19 @@ namespace TangyuanBackendASP.Controllers
                 CommentDateTime = DateTime.UtcNow //这里使用UTC时间，避免时区问题，弃用dto中的CommentDateTime
             };
             _db.Comment.Add(c);
+
+            _db.Notification.Add(new Notification
+            {
+                NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
+                UserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
+                IsRead = false,
+                TargetPostId = comment.PostId,
+                TargetCommentId = comment.ParentCommentId,
+                NotificationDateTime = DateTime.UtcNow
+            });
+
             _db.SaveChanges();
+
             return Ok(new
             {
                 CommentId = c.CommentId

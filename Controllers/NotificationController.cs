@@ -29,5 +29,22 @@ namespace TangyuanBackendASP.Controllers
                 return Ok(nots);
             }
         }
+
+        [Authorize]
+        [HttpGet("mark/{notificationId}")]
+        public IActionResult MarkAsRead(int notificationId)
+        {
+            Notification n = _db.Notification.Where(n => n.NotificationId == notificationId).FirstOrDefault();
+            if (n == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                n.IsRead = true;
+                _db.SaveChanges();
+                return Ok();
+            }
+        }
     }
 }
