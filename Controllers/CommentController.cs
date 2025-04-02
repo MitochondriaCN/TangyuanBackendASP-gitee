@@ -124,10 +124,12 @@ namespace TangyuanBackendASP.Controllers
             _db.Notification.Add(new Notification
             {
                 NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
-                UserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
+                TargetUserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
+                TargetPostId = c.PostId,
+                TargetCommentId = c.ParentCommentId,
+                SourceCommentId = c.CommentId,
+                SourceUserId = c.UserId,
                 IsRead = false,
-                TargetPostId = comment.PostId,
-                TargetCommentId = comment.ParentCommentId,
                 NotificationDateTime = DateTime.UtcNow
             });
 

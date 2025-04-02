@@ -19,7 +19,7 @@ namespace TangyuanBackendASP.Controllers
         [HttpGet("user/{userId}")]
         public IActionResult GetAllUnreadOfUser(int userId)
         {
-            List<Notification> nots = _db.Notification.Where(n => n.UserId == userId && !n.IsRead).ToList();
+            List<Notification> nots = _db.Notification.Where(n => n.TargetUserId == userId && !n.IsRead).ToList();
             if (nots == null)
             {
                 return NotFound();
