@@ -47,7 +47,13 @@ namespace TangyuanBackendASP.Controllers
             }
         }
 
-        //查随机条元数据
+        /// <summary>
+        /// 随机推荐算法。该算法的作用是：从数据库中获取一个帖子元数据的集合，该集合满足下列条件：
+        /// 1. 该集合大小为count；
+        /// 2. 该集合中每个元素的DateTime都在当前时间的前一星期内；
+        /// 3. 多次调用该API时，返回的集合不必相同。
+        /// 如果在满足2.的基础上，不足以找到count个元素，则随机抽取剩余元素，填充到count个元素。
+        /// </summary>
         [HttpGet("metadata/random/{count}")]
         public IActionResult GetRandomMetadata(int count)
         {
@@ -59,7 +65,30 @@ namespace TangyuanBackendASP.Controllers
             {
                 return BadRequest("Count should be less than the total number of posts.");
             }
-            return Ok(_db.PostMetadata.OrderBy(p => EF.Functions.Random()).Take(count).ToList());
+
+
+            DateTime oneWeekAgo = DateTime.UtcNow.AddDays(-7);
+            List<PostMetadata> untakeMetadata = _db.PostMetadata
+                .Where(p => p.PostDateTime >= oneWeekAgo)
+                .ToList();
+            List<PostMetadata> metadata = untakeMetadata.OrderBy(p => Guid.NewGuid()).Take(count).ToList();
+
+            if (metadata.Count < count)
+            {
+                //如果在满足2.的基础上，不足以找到count个元素，则随机抽取剩余元素，填充到count个元素
+                List<PostMetadata> allMetadata = _db.PostMetadata.ToList();
+                Random random = new Random();
+                while (metadata.Count < count)
+                {
+                    int randomIndex = random.Next(allMetadata.Count);
+                    PostMetadata randomPost = allMetadata[randomIndex];
+                    if (!metadata.Contains(randomPost))
+                    {
+                        metadata.Add(randomPost);
+                    }
+                }
+            }
+            return Ok(metadata);
         }
 
         //查内容
