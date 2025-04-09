@@ -121,17 +121,34 @@ namespace TangyuanBackendASP.Controllers
             };
             _db.Comment.Add(c);
 
-            _db.Notification.Add(new Notification
+            if (c.ParentCommentId == 0) //针对帖子评论
             {
-                NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
-                TargetUserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
-                TargetPostId = c.PostId,
-                TargetCommentId = c.ParentCommentId,
-                SourceCommentId = c.CommentId,
-                SourceUserId = c.UserId,
-                IsRead = false,
-                NotificationDateTime = DateTime.UtcNow
-            });
+                _db.Notification.Add(new Notification
+                {
+                    NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
+                    TargetUserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
+                    TargetPostId = c.PostId,
+                    TargetCommentId = 0,
+                    SourceCommentId = c.CommentId,
+                    SourceUserId = c.UserId,
+                    IsRead = false,
+                    NotificationDateTime = DateTime.UtcNow
+                });
+            }
+            else //针对评论评论
+            {
+                _db.Notification.Add(new Notification
+                {
+                    NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
+                    TargetUserId = _db.Comment.Where(c => c.CommentId == comment.ParentCommentId).FirstOrDefault().UserId,
+                    TargetPostId = c.PostId,
+                    TargetCommentId = c.ParentCommentId,
+                    SourceCommentId = c.CommentId,
+                    SourceUserId = c.UserId,
+                    IsRead = false,
+                    NotificationDateTime = DateTime.UtcNow
+                });
+            }
 
             _db.SaveChanges();
 

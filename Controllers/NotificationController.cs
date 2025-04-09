@@ -26,6 +26,8 @@ namespace TangyuanBackendASP.Controllers
             }
             else
             {
+                //根据时间排序，最新的在前
+                nots.Sort((n1, n2) => n2.NotificationDateTime.CompareTo(n1.NotificationDateTime));
                 return Ok(nots);
             }
         }
