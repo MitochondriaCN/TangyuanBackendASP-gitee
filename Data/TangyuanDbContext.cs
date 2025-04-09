@@ -14,5 +14,6 @@ namespace TangyuanBackendASP.Data
         public DbSet<Models.PostBody> PostBody { get; set; } = null;
         public DbSet<Models.Comment> Comment { get; set; } = null;
         public DbSet<Models.Notification> Notification { get; set; } = null;
+        public DbSet<Models.Category> Categories { get; set; } = null;
     }
 }
