@@ -20,6 +20,8 @@ namespace TangyuanBackendASP.Models
         /// </summary>
         public int SectionId {  get; set; }
 
+        public int CategoryId { get; set; }
+
         public bool IsVisible { get; set; }
     }
 }
