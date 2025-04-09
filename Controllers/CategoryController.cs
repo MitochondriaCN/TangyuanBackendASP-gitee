@@ -35,5 +35,20 @@ namespace TangyuanBackendASP.Controllers
                 return Ok(categories);
             }
         }
+
+        [HttpGet("count/{id}")]
+        public IActionResult GetPostCountOfCategory(int id)
+        {
+            Category category = _db.Category.Where(c => c.CategoryId == id).FirstOrDefault();
+            if (category == null)
+            {
+                return NotFound("No such category.");
+            }
+            else
+            {
+                int count = _db.PostMetadata.Where(p => p.CategoryId == id).Count();
+                return Ok(count);
+            }
+        }
     }
 }
