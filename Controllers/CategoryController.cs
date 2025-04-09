@@ -36,6 +36,11 @@ namespace TangyuanBackendASP.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取某个分类下的帖子数量。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("count/{id}")]
         public IActionResult GetPostCountOfCategory(int id)
         {
@@ -47,6 +52,26 @@ namespace TangyuanBackendASP.Controllers
             else
             {
                 int count = _db.PostMetadata.Where(p => p.CategoryId == id).Count();
+                return Ok(count);
+            }
+        }
+
+        /// <summary>
+        /// 获取某个分类下最近一周的帖子数量。
+        /// </summary>
+        [HttpGet("weeklynewcount/{id}")]
+        public IActionResult GetWeeklyNewPostCountOfCategory(int id)
+        {
+            Category category = _db.Category.Where(c => c.CategoryId == id).FirstOrDefault();
+            if (category == null)
+            {
+                return NotFound("No such category.");
+            }
+            else
+            {
+                DateTime now = DateTime.UtcNow;
+                DateTime lastWeek = now.AddDays(-7);
+                int count = _db.PostMetadata.Where(p => p.CategoryId == id && p.PostDateTime >= lastWeek).Count();
                 return Ok(count);
             }
         }
