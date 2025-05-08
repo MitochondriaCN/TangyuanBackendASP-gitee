@@ -131,6 +131,7 @@ namespace TangyuanBackendASP.Controllers
                 UserId = post.UserId,
                 PostDateTime = DateTime.UtcNow,//这里使用UTC时间，避免时区问题，弃用dto中的PostDateTime
                 SectionId = post.SectionId,
+                CategoryId = post.CategoryId,
                 IsVisible = post.IsVisible
             };
             _db.PostMetadata.Add(p);
@@ -197,6 +198,7 @@ namespace TangyuanBackendASP.Controllers
             public int UserId { get; set; }
             public DateTime PostDateTime { get; set; }
             public int SectionId { get; set; }
+            public int CategoryId { get; set; }
             public bool IsVisible { get; set; }
         }
     }
