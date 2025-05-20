@@ -121,7 +121,7 @@ namespace TangyuanBackendASP.Controllers
             };
             _db.Comment.Add(c);
 
-            if (c.ParentCommentId == 0) //针对帖子评论
+            if (c.ParentCommentId == 0 && _db.PostMetadata.Find(c.PostId).UserId != c.UserId) //针对帖子评论
             {
                 _db.Notification.Add(new Notification
                 {
@@ -135,7 +135,7 @@ namespace TangyuanBackendASP.Controllers
                     NotificationDateTime = DateTime.UtcNow
                 });
             }
-            else //针对评论评论
+            else if (c.ParentCommentId != 0 && _db.Comment.Find(c.ParentCommentId).UserId != c.UserId)//针对评论评论
             {
                 _db.Notification.Add(new Notification
                 {
