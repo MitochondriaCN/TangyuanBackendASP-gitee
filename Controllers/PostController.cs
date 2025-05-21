@@ -91,6 +91,60 @@ namespace TangyuanBackendASP.Controllers
             return Ok(metadata);
         }
 
+        //查某领域24小时内发表的帖子数
+        [HttpGet("count/category/24h/{categoryId}")]
+        public IActionResult Get24HPostCountByCategoryId(int categoryId)
+        {
+            if (!_db.Category.Any(p => p.CategoryId == categoryId))
+            {
+                return BadRequest("No such category.");
+            }
+
+            DateTime since = DateTime.UtcNow.AddDays(-1);
+            int count = _db.PostMetadata
+                .Where(p => p.CategoryId == categoryId && p.PostDateTime >= since)
+                .Count();
+
+            return Ok(count);
+        }
+
+
+        /// <summary>
+        /// 获取某个领域下最近一周的帖子数量。
+        /// </summary>
+        [HttpGet("count/category/7d/{categoryId}")]
+        public IActionResult GetWeeklyNewPostCountOfCategory(int categoryId)
+        {
+            Category category = _db.Category.Where(c => c.CategoryId == categoryId).FirstOrDefault();
+            if (category == null)
+            {
+                return NotFound("No such category.");
+            }
+            else
+            {
+                DateTime now = DateTime.UtcNow;
+                DateTime lastWeek = now.AddDays(-7);
+                int count = _db.PostMetadata.Where(p => p.CategoryId == categoryId && p.PostDateTime >= lastWeek).Count();
+                return Ok(count);
+            }
+        }
+
+        //查某领域所有帖子元数据
+        [HttpGet("metadata/category/{categoryId}")]
+        public IActionResult GetMetadatasByCategoryId(int categoryId)
+        {
+            if (!_db.Category.Any(p => p.CategoryId == categoryId))
+            {
+                return BadRequest("No such category.");
+            }
+            List<PostMetadata> metadata = _db.PostMetadata
+                .Where(p => p.CategoryId == categoryId)
+                .OrderByDescending(p => p.PostDateTime)
+                .Take(500)//取前500条
+                .ToList();
+            return Ok(metadata);
+        }
+
         //查内容
         [HttpGet("body/{id}")]
         public IActionResult GetSingleBody(int id)
