@@ -18,6 +18,50 @@ namespace TangyuanBackendASP.Controllers
         }
 
         /// <summary>
+        /// PhiloTaxis™ 循秩™ 帖子推荐主算法。最理想情况下，给出20条帖子元数据。
+        /// 1. 获取用户给定的已经获取的帖子ID。
+        /// 2. 从w=0开始，调用GetSuggested...获取每个w的帖子元数据，直到获取到20条为止。
+        /// 3. 在2.的过程中，排除用户已经获取的帖子ID。
+        /// 4. 如果在w>24的情况下仍然没有获取到20条，那么返回已获取的帖子ID列表。
+        /// </summary>
+        /// <param name="exceptedPosts"></param>
+        /// <returns></returns>
+        [HttpPost("postmetadata")]
+        public IActionResult PostMetadataCommon(List<int> exceptedPostIds)
+        {
+            // 1. 获取用户给定的已经获取的帖子ID
+            var exceptedPosts = exceptedPostIds ?? new List<int>();
+            // 2. 从w=0开始，调用GetSuggested...获取每个w的帖子元数据，直到获取到20条为止。
+            var suggestedPosts = new List<Models.PostMetadata>();
+            for (int w = 0; w <= 24; w++)
+            {
+                var result = GetSuggestedPostMetadataInWeekEarlier(w);
+                if (result is OkObjectResult okResult)
+                {
+                    var posts = okResult.Value as List<Models.PostMetadata>;
+                    if (posts != null)
+                    {
+                        // 3. 排除用户已经获取的帖子ID
+                        posts = posts.Where(p => !exceptedPosts.Contains(p.PostId)).ToList();
+                        suggestedPosts.AddRange(posts);
+                    }
+                }
+                // 如果已经获取到20条，退出循环
+                if (suggestedPosts.Count >= 20)
+                {
+                    break;
+                }
+            }
+            // 4. 如果一条帖子都没有获取到，返回404
+            if (suggestedPosts.Count == 0)
+            {
+                return NotFound("No suggested posts found.");
+            }
+            // 返回前20条建议的帖子元数据
+            return Ok(suggestedPosts.Take(20).ToList());
+        }
+
+        /// <summary>
         /// 获取随机20条帖子元数据。此算法用户无关、状态无关，每次调用返回结果不一定相同。
         /// 选取方法：
         /// 1. 在过去[7(w+1),7w]天内的所有帖子中，随机选取20条。
