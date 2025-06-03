@@ -136,12 +136,13 @@ namespace TangyuanBackendASP.Controllers
             //如果是一条回复
             if (c.ParentCommentId != 0)
             {
-                if (_db.Comment.Find(c.ParentCommentId).UserId != c.UserId)
+                if (_db.Comment.Find(c.ParentCommentId).UserId != c.UserId &&
+                    _db.Comment.Find(c.ParentCommentId).UserId != _db.PostMetadata.Where(p => p.PostId == c.PostId).FirstOrDefault().UserId)
                 {
-                    //那么对被回复者发送通知。注意到回复自己时，不需要给自己发送通知。
+                    //那么对被回复者发送通知。注意到回复自己或楼主时，不需要给自己或楼主发送通知。
                     _db.NewNotification.Add(new NewNotification
                     {
-                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NewNotificationId + 1 ?? 1,
+                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NotificationId + 1 ?? 1,
                         Type = "reply",
                         TargetUserId = _db.Comment.Where(c => c.CommentId == comment.ParentCommentId).FirstOrDefault().UserId,
                         SourceId = c.CommentId,
@@ -151,9 +152,10 @@ namespace TangyuanBackendASP.Controllers
                     });
                 }
 
-                //同时，对已经回复过同一条父评论的用户发送通知
+                //同时，对已经回复过同一条父评论的用户发送通知，注意到不需要给楼主发送通知。
                 var usersWhoReplied = _db.Comment
-                    .Where(c => c.ParentCommentId == comment.ParentCommentId && c.UserId != comment.UserId)
+                    .Where(c => c.ParentCommentId == comment.ParentCommentId && c.UserId != comment.UserId
+                    && c.UserId != _db.PostMetadata.Where(p => p.PostId == c.PostId).FirstOrDefault().UserId)
                     .Select(c => c.UserId)
                     .Distinct()
                     .ToList();
@@ -161,7 +163,7 @@ namespace TangyuanBackendASP.Controllers
                 {
                     _db.NewNotification.Add(new NewNotification
                     {
-                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NewNotificationId + 1 ?? 1,
+                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NotificationId + 1 ?? 1,
                         Type = "reply",
                         TargetUserId = userId,
                         SourceId = c.CommentId,
