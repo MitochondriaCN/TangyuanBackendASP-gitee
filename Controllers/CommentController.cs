@@ -121,33 +121,55 @@ namespace TangyuanBackendASP.Controllers
             };
             _db.Comment.Add(c);
 
-            if (c.ParentCommentId == 0 && _db.PostMetadata.Find(c.PostId).UserId != c.UserId) //针对帖子评论
+            //无论如何，楼主都会收到一条新评论通知
+            _db.NewNotification.Add(new NewNotification
             {
-                _db.Notification.Add(new Notification
-                {
-                    NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
-                    TargetUserId = _db.PostMetadata.Where(p => p.PostId == comment.PostId).FirstOrDefault().UserId,
-                    TargetPostId = c.PostId,
-                    TargetCommentId = 0,
-                    SourceCommentId = c.CommentId,
-                    SourceUserId = c.UserId,
-                    IsRead = false,
-                    NotificationDateTime = DateTime.UtcNow
-                });
-            }
-            else if (c.ParentCommentId != 0 && _db.Comment.Find(c.ParentCommentId).UserId != c.UserId)//针对评论评论
+                NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NotificationId + 1 ?? 1,
+                Type = "comment",
+                TargetUserId = _db.PostMetadata.Where(p => p.PostId == c.PostId).FirstOrDefault().UserId, //目标用户为楼主，claims that this could never be null because of the previous check
+                SourceId = c.CommentId,
+                SourceType = "comment",
+                IsRead = false,
+                CreateDate = DateTime.UtcNow
+            });
+
+            //如果是一条回复
+            if (c.ParentCommentId != 0)
             {
-                _db.Notification.Add(new Notification
+                if (_db.Comment.Find(c.ParentCommentId).UserId != c.UserId)
                 {
-                    NotificationId = _db.Notification.OrderByDescending(n => n.NotificationId).FirstOrDefault().NotificationId + 1,
-                    TargetUserId = _db.Comment.Where(c => c.CommentId == comment.ParentCommentId).FirstOrDefault().UserId,
-                    TargetPostId = c.PostId,
-                    TargetCommentId = c.ParentCommentId,
-                    SourceCommentId = c.CommentId,
-                    SourceUserId = c.UserId,
-                    IsRead = false,
-                    NotificationDateTime = DateTime.UtcNow
-                });
+                    //那么对被回复者发送通知。注意到回复自己时，不需要给自己发送通知。
+                    _db.NewNotification.Add(new NewNotification
+                    {
+                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NewNotificationId + 1 ?? 1,
+                        Type = "reply",
+                        TargetUserId = _db.Comment.Where(c => c.CommentId == comment.ParentCommentId).FirstOrDefault().UserId,
+                        SourceId = c.CommentId,
+                        SourceType = "comment",
+                        IsRead = false,
+                        CreateDate = DateTime.UtcNow
+                    });
+                }
+
+                //同时，对已经回复过同一条父评论的用户发送通知
+                var usersWhoReplied = _db.Comment
+                    .Where(c => c.ParentCommentId == comment.ParentCommentId && c.UserId != comment.UserId)
+                    .Select(c => c.UserId)
+                    .Distinct()
+                    .ToList();
+                foreach (var userId in usersWhoReplied)
+                {
+                    _db.NewNotification.Add(new NewNotification
+                    {
+                        NotificationId = _db.NewNotification.OrderByDescending(n => n.NotificationId).FirstOrDefault()?.NewNotificationId + 1 ?? 1,
+                        Type = "reply",
+                        TargetUserId = userId,
+                        SourceId = c.CommentId,
+                        SourceType = "comment",
+                        IsRead = false,
+                        CreateDate = DateTime.UtcNow
+                    });
+                }
             }
 
             _db.SaveChanges();
