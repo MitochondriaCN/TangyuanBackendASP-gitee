@@ -40,7 +40,10 @@ namespace TangyuanBackendASP.Controllers
                 var start = now.AddDays(-7 * (w + 1));
                 // 查询该区间内的所有帖子（只选IsVisible为true）
                 var query = _db.PostMetadata
-                    .Where(p => p.IsVisible && p.PostDateTime >= start && p.PostDateTime < end);
+                    .Where(p => p.IsVisible
+                    && p.PostDateTime >= start
+                    && p.PostDateTime < end
+                    && p.SectionId == sectionId);
                 // 排除用户已经获取的帖子ID
                 if (exceptedPostIds != null && exceptedPostIds.Count > 0)
                 {
