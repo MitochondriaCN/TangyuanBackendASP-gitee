@@ -121,6 +121,8 @@ namespace TangyuanBackendASP.Controllers
             };
             _db.Comment.Add(c);
 
+            _db.SaveChanges();
+
             //无论如何，楼主都会收到一条新评论通知
             _db.NewNotification.Add(new NewNotification
             {
@@ -132,6 +134,8 @@ namespace TangyuanBackendASP.Controllers
                 IsRead = false,
                 CreateDate = DateTime.UtcNow
             });
+
+            _db.SaveChanges();
 
             //如果是一条回复
             if (c.ParentCommentId != 0)
@@ -150,6 +154,8 @@ namespace TangyuanBackendASP.Controllers
                         IsRead = false,
                         CreateDate = DateTime.UtcNow
                     });
+
+                    _db.SaveChanges();
                 }
 
                 //同时，对已经回复过同一条父评论的用户发送通知，注意到不需要给楼主发送通知。
@@ -171,6 +177,7 @@ namespace TangyuanBackendASP.Controllers
                         IsRead = false,
                         CreateDate = DateTime.UtcNow
                     });
+                    _db.SaveChanges();
                 }
             }
 
