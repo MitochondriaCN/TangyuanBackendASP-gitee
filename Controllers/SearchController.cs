@@ -55,7 +55,7 @@ namespace TangyuanBackendASP.Controllers
         {
             // 使用参数化查询防止SQL注入
             var users = _db.User
-                .FromSqlRaw("SELECT * FROM User WHERE MATCH (Nickname) AGAINST ({0})", nickname)
+                .FromSqlRaw("SELECT * FROM User WHERE MATCH (NickName) AGAINST ({0})", nickname)
                 .ToList();
             if (users.Any())
             {
@@ -77,7 +77,7 @@ namespace TangyuanBackendASP.Controllers
         {
             // 使用参数化查询防止SQL注入
             var commentIds = _db.Comment
-                .FromSqlRaw("SELECT * FROM Comment WHERE MATCH (TextContent) AGAINST ({0})", keyword)
+                .FromSqlRaw("SELECT * FROM Comment WHERE MATCH (Content) AGAINST ({0})", keyword)
                 .Select(c => c.CommentId)
                 .ToList();
             if (commentIds.Any())
