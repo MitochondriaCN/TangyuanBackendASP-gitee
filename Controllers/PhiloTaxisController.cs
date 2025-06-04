@@ -19,46 +19,48 @@ namespace TangyuanBackendASP.Controllers
 
         /// <summary>
         /// PhiloTaxis™ 循秩™ 帖子推荐主算法。最理想情况下，给出20条帖子元数据。
-        /// 1. 获取用户给定的已经获取的帖子ID。
-        /// 2. 从w=0开始，调用GetSuggested...获取每个w的帖子元数据，直到获取到20条为止。
-        /// 3. 在2.的过程中，排除用户已经获取的帖子ID。
-        /// 4. 如果在w>24的情况下仍然没有获取到20条，那么返回已获取的帖子ID列表。
+        /// 1. 获取用户给定的已经获取的帖子ID。创建推荐帖子列表suggestedPosts。
+        /// 2. 令w=0，随机使用[7(w+1),7w]天前范围内的帖子填充suggestedPosts，并且排除用户已经获取的帖子ID。
+        /// 3. 如果suggestedPosts的数量小于20，令w=w+1，重复步骤2。
+        /// 4. 如果当前w=24，仍然没有获取到20条帖子元数据，则返回404。
         /// </summary>
         /// <param name="exceptedPosts"></param>
         /// <returns></returns>
         [HttpPost("postmetadata")]
         public IActionResult PostMetadataCommon(List<int> exceptedPostIds)
         {
-            // 1. 获取用户给定的已经获取的帖子ID
-            var exceptedPosts = exceptedPostIds ?? new List<int>();
-            // 2. 从w=0开始，调用GetSuggested...获取每个w的帖子元数据，直到获取到20条为止。
-            var suggestedPosts = new List<Models.PostMetadata>();
-            for (int w = 0; w <= 24; w++)
+            // 1. 初始化推荐帖子列表
+            var suggestedPosts = new List<int>();
+            // 2. 从w=0开始循环，直到w=24
+            for (int w = 0; w < 25; w++)
             {
-                var result = GetSuggestedPostMetadataInWeekEarlier(w);
-                if (result is OkObjectResult okResult)
+                // 计算时间区间：[7(w+1), 7w]天前
+                var now = DateTime.UtcNow;
+                var end = now.AddDays(-7 * w);
+                var start = now.AddDays(-7 * (w + 1));
+                // 查询该区间内的所有帖子（只选IsVisible为true）
+                var query = _db.PostMetadata
+                    .Where(p => p.IsVisible && p.PostDateTime >= start && p.PostDateTime < end);
+                // 排除用户已经获取的帖子ID
+                if (exceptedPostIds != null && exceptedPostIds.Count > 0)
                 {
-                    var posts = okResult.Value as List<Models.PostMetadata>;
-                    if (posts != null)
-                    {
-                        // 3. 排除用户已经获取的帖子ID
-                        posts = posts.Where(p => !exceptedPosts.Contains(p.PostId)).ToList();
-                        suggestedPosts.AddRange(posts);
-                    }
+                    query = query.Where(p => !exceptedPostIds.Contains(p.PostId));
                 }
-                // 如果已经获取到20条，退出循环
+                // 将查询结果转换为列表
+                var posts = query.Select(p => p.PostId).ToList();
+                // 随机选取最多20条
+                var rng = new Random();
+                var selectedPosts = posts.OrderBy(x => rng.Next()).Take(20 - suggestedPosts.Count).ToList();
+                // 将选中的帖子添加到推荐列表中
+                suggestedPosts.AddRange(selectedPosts);
+                // 如果已经获取到20条，返回结果
                 if (suggestedPosts.Count >= 20)
                 {
-                    break;
+                    return Ok(suggestedPosts.Take(20).ToList());
                 }
             }
-            // 4. 如果一条帖子都没有获取到，返回404
-            if (suggestedPosts.Count == 0)
-            {
-                return NotFound("No suggested posts found.");
-            }
-            // 返回前20条建议的帖子元数据
-            return Ok(suggestedPosts.Take(20).ToList());
+            // 如果循环结束后仍然没有获取到20条，返回404 Not Found
+            return NotFound("No enough posts found.");
         }
 
         /// <summary>
