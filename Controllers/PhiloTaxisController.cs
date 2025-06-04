@@ -26,8 +26,8 @@ namespace TangyuanBackendASP.Controllers
         /// </summary>
         /// <param name="exceptedPosts"></param>
         /// <returns></returns>
-        [HttpPost("postmetadata")]
-        public IActionResult PostMetadataCommon(List<int> exceptedPostIds)
+        [HttpPost("postmetadata/{sectionId}")]
+        public IActionResult PostMetadataCommon(int sectionId, [FromBody] List<int> exceptedPostIds)
         {
             // 1. 初始化推荐帖子列表
             var suggestedPosts = new List<int>();
