@@ -59,7 +59,10 @@ namespace TangyuanBackendASP.Controllers
                 // 如果已经获取到20条，返回结果
                 if (suggestedPosts.Count >= 20)
                 {
-                    return Ok(suggestedPosts.Take(20).ToList());
+                    //返回List<PostMetadata>
+                    return Ok(_db.PostMetadata
+                        .Where(p => suggestedPosts.Contains(p.PostId))
+                        .ToList());
                 }
             }
             // 如果循环结束后仍然没有获取到20条，返回404 Not Found
