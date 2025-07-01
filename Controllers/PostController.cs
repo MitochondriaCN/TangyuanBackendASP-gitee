@@ -241,6 +241,13 @@ namespace TangyuanBackendASP.Controllers
                 _db.PostBody.Remove(pb);
             }
 
+            //删评论
+            List<Comment> comments = _db.Comment.Where(c => c.PostId == id).ToList();
+            foreach (Comment comment in comments)
+            {
+                _db.Comment.Remove(comment);
+            }
+
             _db.SaveChanges();
             return Ok();
         }
