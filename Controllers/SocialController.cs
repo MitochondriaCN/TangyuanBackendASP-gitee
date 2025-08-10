@@ -90,6 +90,19 @@ namespace TangyuanBackendASP.Controllers
                 FollowedAt = DateTime.UtcNow // 使用UTC时间
             };
             _db.Follow.Add(follow);
+
+            //发送通知
+            NewNotification notification = new NewNotification
+            {
+                Type = "follow",
+                TargetUserId = dto.TargetUserId,
+                SourceId = dto.SourceUserId,
+                SourceType = "user",
+                IsRead = false,
+                CreateDate = DateTime.UtcNow
+            };
+            _db.NewNotification.Add(notification);
+
             _db.SaveChanges();
             return Ok();
         }

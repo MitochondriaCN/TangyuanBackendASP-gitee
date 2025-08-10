@@ -9,7 +9,7 @@ namespace TangyuanBackendASP.Models
         /// <summary>
         /// 通知类型：comment, reply, follow, mention, notice
         /// </summary>
-        public string Type { get; set; }
+        public required string Type { get; set; }
         /// <summary>
         /// 目标用户ID
         /// </summary>
@@ -21,7 +21,7 @@ namespace TangyuanBackendASP.Models
         /// <summary>
         /// 通知源类型：post, comment, user
         /// </summary>
-        public string SourceType { get; set; }
+        public required string SourceType { get; set; }
         /// <summary>
         /// 是否已读
         /// </summary>
